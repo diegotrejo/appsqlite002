@@ -1,0 +1,139 @@
+﻿Build1=Default,b4a.example
+File1=Layout.bal
+FileGroup1=Default Group
+Group=Default Group
+Library1=core
+Library2=xui
+Library3=sql
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="34"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~CreateResourceFromFile(Macro, Themes.LightTheme)~\n~'End of default text.~\n~
+Module1=Producto
+Module2=Productos
+Module3=Starter
+NumberOfFiles=1
+NumberOfLibraries=3
+NumberOfModules=3
+Version=13
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: B4A Example
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+	Private xui As XUI
+End Sub
+
+Sub Globals
+	'These global variables will be redeclared each time the activity is created.
+	Private txtID As EditText
+	Private txtDescripcion As EditText
+	Private txtPrecioUnitario As EditText
+	Private txtIVA As EditText
+	Private txtExistencia As EditText
+	Private p As Productos
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+	Activity.LoadLayout("Layout")
+	p.Initialize("tienda.db")
+	
+'	Dim r As Producto = p.Create(1, "pan", 0.12, 0, 100)
+'	If r.Id > 0 Then
+'		Log( r.Nombre )
+'	End If
+	
+'	p.Update(1, "PAN CENTENO", 0.20, 0, 200)
+'	Dim r As Producto = p.Read_ById(1)
+'	If r.Id > 0 Then
+'		Log( r.Nombre )
+'		Log( r.PrecioUnitario )
+'	End If
+'	
+'	p.Delete( 1 )
+'	r = p.Read_ById(1)
+'	If r.Id > 0 Then
+'		Log( r.Nombre )
+'		Log( r.PrecioUnitario )
+'	Else
+'		Log( "registro no encontrado")
+'	End If
+'	
+'	p.Create(1, "aaa", 1,1,1)
+'	p.Create(2, "bbb", 2,2,2)
+'	p.Create(3, "ccc", 3,3,3)
+'	p.Create(4, "ddd", 4,4,4)
+'	p.Create(5, "eee", 5,5,5)
+'	
+'	Dim l As List = p.Read_All()
+'	For Each registro As Producto In l
+'		Log("----------------------------")
+'		Log( registro.Id)
+'		Log( registro.Nombre )
+'		Log( registro.PrecioUnitario )
+'		Log( registro.IVA )
+'		Log( registro.Existencia )
+'	Next
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Private Sub cmdDelete_Click
+	Dim r As Boolean = p.Delete( txtID.Text )
+	If r Then
+		xui.MsgboxAsync("registro borrado", "OK")
+		txtID.Text = ""
+		txtDescripcion.Text = ""
+		txtPrecioUnitario.Text = ""
+		txtIVA.Text = ""
+		txtExistencia.Text = ""
+	Else
+		xui.MsgboxAsync("registro NO borrado", "ERROR ")
+	End If
+End Sub
+
+Private Sub cmdUpdate_Click
+	Dim r As Boolean = p.Update( txtID.Text, txtDescripcion.Text, txtPrecioUnitario.Text, txtIVA.Text, txtExistencia.Text )
+	If r Then
+		xui.MsgboxAsync("registro actualizado", "OK")
+	Else
+		xui.MsgboxAsync("registro NO actualizado", "ERROR ")
+	End If
+End Sub
+
+Private Sub cmdRead_Click
+	Dim r As Producto = p.Read_ById( txtID.Text )
+	If r.Id > 0 Then
+		txtDescripcion.Text = r.Nombre
+		txtPrecioUnitario.Text = r.PrecioUnitario
+		txtIVA.Text = r.IVA
+		txtExistencia.Text = r.Existencia
+	Else
+		xui.MsgboxAsync("registro NO encontrado", "ERROR ")
+	End If
+End Sub
+
+Private Sub cmdCrear_Click
+	Dim r As Producto = p.Create( txtID.Text, txtDescripcion.Text, txtPrecioUnitario.Text, txtIVA.Text, txtExistencia.Text )
+	If r.Id > 0 Then
+		xui.MsgboxAsync("registro creado !!", "OK")
+	Else
+		xui.MsgboxAsync("registro NO creado", "ERROR ")
+	End If
+End Sub
